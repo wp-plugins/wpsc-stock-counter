@@ -1,6 +1,7 @@
 <?php
 /*
 Plugin Name: WPSC Stock Counter
+Plugin URI: http://wordpress.org/extend/plugins/wpsc-stock-counter/
 Description: Plugin for Shopping Cart from Instinct Entertainment to count product stock. Products can be combined to be counted together.
 Version: 1.0
 Author: Kolja Schleich
