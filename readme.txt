@@ -5,11 +5,11 @@ Requires at least: 2.3
 Tested up to: 2.5
 Stable tag: 1.0
 
-Plugin for the Shopping Cart from <http://www.instinct.co.nz/e-commerce-post Instinct Entertainment> to count stock also of connected products.
+Plugin for the Shopping Cart from Instinct Entertainment [www.instinct.co.nz/e-commerce-post] to count stock also of connected products.
 
 == Description ==
 
-This Plugin is for the Shopping Cart from <http://www.instinct.co.nz/e-commerce-post Instinct Entertainment> to count the product stock. Different products can be connected via a comma separated list of their IDs to be counted together.
+This Plugin is for the Shopping Cart from Instinct Entertainment [<http://www.instinct.co.nz/e-commerce-post] to count the product stock. Different products can be connected via a comma separated list of their IDs to be counted together.
 
 == Installation ==
 
