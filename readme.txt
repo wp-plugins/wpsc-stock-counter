@@ -3,13 +3,16 @@ Contributors: Kolja Schleich
 Tags: shopping cart, tickets, shop, e-commerce, stock counter
 Requires at least: 2.3
 Tested up to: 2.5
-Stable tag: 1.0
+Stable tag: 1.1
 
-Plugin for the Shopping Cart from Instinct Entertainment [www.instinct.co.nz/e-commerce-post] to count stock also of connected products.
+Plugin for the [Shopping Cart Plugin](http://wordpress.org/extend/plugins/wp-e-commerce/) to count stock also of connected products.
 
 == Description ==
 
-This Plugin is for the Shopping Cart from Instinct Entertainment [<http://www.instinct.co.nz/e-commerce-post] to count the product stock. Different products can be connected via a comma separated list of their IDs to be counted together.
+This Plugin is for the [Shopping Cart Plugin](http://wordpress.org/extend/plugins/wp-e-commerce/) to count the product stock. Different products can be connected via a comma separated list of their IDs to be counted together.
+
+**Translations**
+The Plugin supports WordPress' Internationalization. Check out the [repository](http://dev.wp-plugins.org/browser/wpsc-stock-counter/i18n/).
 
 == Installation ==
 

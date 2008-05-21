@@ -2,8 +2,8 @@
 /*
 Plugin Name: WPSC Stock Counter
 Plugin URI: http://wordpress.org/extend/plugins/wpsc-stock-counter/
-Description: Plugin for Shopping Cart from Instinct Entertainment to count product stock. Products can be combined to be counted together.
-Version: 1.0
+Description: Plugin for <a href="http://www.instinct.co.nz">Wordpress Shopping Cart</a> to count product stock. Products can be combined to be counted together.
+Version: 1.1
 Author: Kolja Schleich
 
 Copyright 2007-2008  Kolja Schleich  (email : kolja.schleich@googlemail.com)
@@ -140,7 +140,7 @@ class WPSC_StockCounter
 		global $wpdb;
 		
 		$options = get_option( 'wpsc-stock-counter' );
-		if ( isset( $_POST['updateEventsCounter'] ) ) {
+		if ( isset( $_POST['updateEventsCounter'] ) && check_admin_referer( 'wpsc-stock-counter-update-settings_stock' ) && current_user_can('edit_stock_counter_settings') ) {
 			if ( 'settings' == $_POST['updateEventsCounter'] ) {
 				foreach ( $_POST['products'] AS $pid => $data ) {
 					$options['products'][$pid] = $data;
@@ -154,9 +154,11 @@ class WPSC_StockCounter
 ?>
 		<div class="wrap">
 			<h2><?php _e( 'Stock Summary', 'wpsc-stock-counter' ) ?></h2>
-			<p><a href="#" onclick="Element.show('wpsc-stock-counter-settings')"><?php _e( 'Show Settings', 'wpsc-stock-counter' ) ?></a></p>
-
-			<table class="widefat">
+			<?php if ( current_user_can('edit_stock_counter_settings') ) : ?>
+				<p style="margin-bottom: 0;"><a href="#" onclick="Element.show('wpsc-stock-counter-settings')"><?php _e( 'Show Settings', 'wpsc-stock-counter' ) ?></a></p>
+			<?php endif; ?>
+			
+			<table class="widefat" style="margin-top: 1em;">
 			<thead>
 				<tr>
 					<th scope="col"><?php _e( 'Event', 'wpsc-stock-counter' ) ?></th>
@@ -178,11 +180,14 @@ class WPSC_StockCounter
 			</tbody>
 			</table>
 		</div>
+		<?php if ( current_user_can('edit_stock_counter_settings') ) : ?>
 		<div class="wrap" id="wpsc-stock-counter-settings" style="display: none;">
 			<h2><?php _e( 'Settings', 'wpsc-stock-counter' ) ?></h2>
 			<p><a href="#" onclick="Element.hide('wpsc-stock-counter-settings')"><?php _e( 'Hide Settings', 'wpsc-stock-counter' ) ?></a></p>
 			
 			<form action="" method="post">
+				<?php wp_nonce_field( 'wpsc-stock-counter-update-settings_stock' ) ?>
+				
 				<table class="widefat">
 				<thead>
 					<tr>
@@ -212,7 +217,7 @@ class WPSC_StockCounter
 				<p class="submit"><input type="submit" value="<?php _e( 'Save Settings', 'wpsc-stock-counter' ) ?> &raquo;" class="button" /></p>
 			</form>
 		</div>
-		<?php
+		<?php endif;
 	}
 
 		
@@ -227,6 +232,16 @@ class WPSC_StockCounter
 		$options = array();
 		add_option( 'wpsc-stock-counter', $options, 'DTL Ticketing Options', 'yes' );
 
+		/*
+		* Add Capability to export DTA Files and change DTA Settings
+		*/
+		$role = get_role('administrator');
+		$role->add_cap('view_stock_counter');
+		$role->add_cap('edit_stock_counter_settings');
+		
+		$role = get_role('editor');
+		$role->add_cap('view_stock_counter');
+		
 		return;
 	}
 	
@@ -250,7 +265,7 @@ class WPSC_StockCounter
 	 */
 	 function addAdminMenu()
 	 {
-	 	$mypage = add_submenu_page( 'wp-shopping-cart/display-log.php', __( 'Stock Counter', 'wpsc-stock-counter' ), __( 'Stock Counter', 'wpsc-stock-counter' ), 7, basename(__FILE__), array(&$this, 'printAdminPage') );
+	 	$mypage = add_submenu_page( 'wp-shopping-cart/display-log.php', __( 'Stock Counter', 'wpsc-stock-counter' ), __( 'Stock Counter', 'wpsc-stock-counter' ), 'view_stock_counter', basename(__FILE__), array(&$this, 'printAdminPage') );
 		add_action( "admin_print_scripts-$mypage", array(&$this, 'addHeaderCode') );
 	 }
 }
