@@ -12,7 +12,8 @@ Plugin for the [Shopping Cart Plugin](http://wordpress.org/extend/plugins/wp-e-c
 This Plugin is for the [Shopping Cart Plugin](http://wordpress.org/extend/plugins/wp-e-commerce/) to count the product stock. Different products can be connected via a comma separated list of their IDs to be counted together.
 
 **Translations**
-The Plugin supports WordPress' Internationalization. Check out the [repository](http://dev.wp-plugins.org/browser/wpsc-stock-counter/i18n/).
+
+* German
 
 == Installation ==
 

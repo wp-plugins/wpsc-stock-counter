@@ -213,8 +213,7 @@ class WPSC_StockCounter
 				</table>
 				<p style="font-size: 0.9em; font-style: italic;">*<?php _e( 'Comma separated list of IDs', 'wpsc-stock-counter' ) ?></p>	
 	
-				<input type="hidden" name="updateEventsCounter" value="settings" />
-				<p class="submit"><input type="submit" value="<?php _e( 'Save Settings', 'wpsc-stock-counter' ) ?> &raquo;" class="button" /></p>
+				<p class="submit"><input type="submit" name="updateEventsCounter" value="<?php _e( 'Save Settings', 'wpsc-stock-counter' ) ?> &raquo;" class="button" /></p>
 			</form>
 		</div>
 		<?php endif;
