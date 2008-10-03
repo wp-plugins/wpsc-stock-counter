@@ -1,0 +1,72 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2008-05-22 13:54+0100\n"
+"Last-Translator: Kolja Schleich <kolja.schleich@googlemail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Country: GERMANY\n"
+
+#: wpsc-stock-counter.php:151
+msgid "Settings saved"
+msgstr "Einstellungen gespeichert"
+
+#: wpsc-stock-counter.php:156
+msgid "Stock Summary"
+msgstr "Inventar Übersicht"
+
+#: wpsc-stock-counter.php:158
+msgid "Show Settings"
+msgstr "Einstellungen anzeigen"
+
+#: wpsc-stock-counter.php:164,195
+msgid "Event"
+msgstr "Veranstaltung"
+
+#: wpsc-stock-counter.php:165
+msgid "Sold"
+msgstr "Verkauft"
+
+#: wpsc-stock-counter.php:166
+msgid "Available"
+msgstr "Verfügbar"
+
+#: wpsc-stock-counter.php:185
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: wpsc-stock-counter.php:186
+msgid "Hide Settings"
+msgstr "Einstellungen verbergen"
+
+#: wpsc-stock-counter.php:194
+msgid "ID"
+msgstr "ID"
+
+#: wpsc-stock-counter.php:196
+msgid "Count"
+msgstr "Zählen"
+
+#: wpsc-stock-counter.php:197
+msgid "Stock"
+msgstr "Gesamtzahl"
+
+#: wpsc-stock-counter.php:198
+msgid "Connected Products"
+msgstr "Verknüpfte Produkte"
+
+#: wpsc-stock-counter.php:214
+msgid "Comma separated list of IDs"
+msgstr "Komma getrennte Liste von IDs"
+
+#: wpsc-stock-counter.php:216
+msgid "Save Settings"
+msgstr "Einstellungen speichern"
+
+#: wpsc-stock-counter.php:267
+msgid "Stock Counter"
+msgstr "Inventar Zähler"
+
