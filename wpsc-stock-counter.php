@@ -3,7 +3,7 @@
 Plugin Name: WPSC Stock Counter
 Plugin URI: http://wordpress.org/extend/plugins/wpsc-stock-counter/
 Description: Plugin for <a href="http://www.instinct.co.nz">Wordpress Shopping Cart</a> to count product stock. Products can be combined to be counted together.
-Version: 1.1
+Version: 1.1.2
 Author: Kolja Schleich
 
 Copyright 2007-2008  Kolja Schleich  (email : kolja.schleich@googlemail.com)
@@ -46,7 +46,7 @@ class WPSC_StockCounter
 
 		return;
 	}
-	function WPSC_EventsTicketCounter()
+	function WPSC_StockCounter()
 	{
 		$this->__construct();
 	}
@@ -140,13 +140,13 @@ class WPSC_StockCounter
 		global $wpdb;
 		
 		$options = get_option( 'wpsc-stock-counter' );
-		if ( isset( $_POST['updateEventsCounter'] ) && check_admin_referer( 'wpsc-stock-counter-update-settings_stock' ) && current_user_can('edit_stock_counter_settings') ) {
-			if ( 'settings' == $_POST['updateEventsCounter'] ) {
-				foreach ( $_POST['products'] AS $pid => $data ) {
-					$options['products'][$pid] = $data;
-				}
-				update_option( 'wpsc-stock-counter', $options );
+		if ( isset( $_POST['updateEventsCounter'] ) && current_user_can('edit_stock_counter_settings') ) {
+			check_admin_referer( 'wpsc-stock-counter-update-settings_stock' );
+
+			foreach ( $_POST['products'] AS $pid => $data ) {
+				$options['products'][$pid] = $data;
 			}
+			update_option( 'wpsc-stock-counter', $options );
 		
 			echo '<div id="message" class="updated fade"><p><strong>'.__( 'Settings saved', 'wpsc-stock-counter' ) .'</strong></p></div>';
 			$this->getProducts();
@@ -267,12 +267,27 @@ class WPSC_StockCounter
 	 	$mypage = add_submenu_page( 'wp-shopping-cart/display-log.php', __( 'Stock Counter', 'wpsc-stock-counter' ), __( 'Stock Counter', 'wpsc-stock-counter' ), 'view_stock_counter', basename(__FILE__), array(&$this, 'printAdminPage') );
 		add_action( "admin_print_scripts-$mypage", array(&$this, 'addHeaderCode') );
 	 }
+	 
+	 
+	/**
+	 * Uninstall Plugin for WP 2.7
+	 *
+	 * @param none
+	 */
+	function uninstall()
+	{
+	 	delete_option( 'wpsc-stock-counter' );
+	}
 }
 
 $wpsc_stock_counter = new WPSC_StockCounter();
 
-add_action( 'activate_wpsc-stock-counter/wpsc-stock-counter.php', array(&$wpsc_stock_counter, 'init') );
+register_activation_hook(__FILE__, array(&$wpsc_stock_counter, 'init') );
 add_action( 'admin_menu', array(&$wpsc_stock_counter, 'addAdminMenu') );
 
 load_plugin_textdomain( 'wpsc-stock-counter', $path = PLUGINDIR.'/'.basename(__FILE__, ".php")  );
+
+// Uninstallation for WP 2.7
+if ( function_exists('register_uninstall_hook') )
+	register_uninstall_hook(__FILE__, array(&$wpsc_stock_counter, 'uninstall'));
 ?>

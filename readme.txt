@@ -2,8 +2,8 @@
 Contributors: Kolja Schleich
 Tags: shopping cart, tickets, shop, e-commerce, stock counter
 Requires at least: 2.3
-Tested up to: 2.5
-Stable tag: 1.1
+Tested up to: 2.7
+Stable tag: 1.1.2
 
 Plugin for the [Shopping Cart Plugin](http://wordpress.org/extend/plugins/wp-e-commerce/) to count stock also of connected products.
 
