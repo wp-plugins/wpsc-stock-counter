@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 class WPSC_StockCounter
 {
 	/**
-	 * This Array includes all products together with options
+	 * all products with options
 	 *
 	 * @var array
 	 */
@@ -43,8 +43,6 @@ class WPSC_StockCounter
 	{
 		$this->plugin_url = get_bloginfo( 'wpurl' )."/".PLUGINDIR.'/'.basename(__FILE__, ".php");
 		$this->getProducts();
-
-		return;
 	}
 	function WPSC_StockCounter()
 	{
@@ -133,7 +131,7 @@ class WPSC_StockCounter
 	 * prints admin page
 	 *
 	 * @param none
-	 * @return none
+	 * @return void
 	 */
 	function printAdminPage()
 	{
@@ -240,8 +238,6 @@ class WPSC_StockCounter
 		
 		$role = get_role('editor');
 		$role->add_cap('view_stock_counter');
-		
-		return;
 	}
 	
 	
@@ -249,6 +245,7 @@ class WPSC_StockCounter
 	* adds code to Wordpress head
 	*
 	* @param none
+	* @return void
 	*/
 	function addHeaderCode()
 	{
@@ -260,7 +257,7 @@ class WPSC_StockCounter
 	 * adds admin menu
 	 *
 	 * @param none
-	 * @return none
+	 * @return void
 	 */
 	 function addAdminMenu()
 	 {
@@ -273,6 +270,7 @@ class WPSC_StockCounter
 	 * Uninstall Plugin for WP 2.7
 	 *
 	 * @param none
+	 * @return void
 	 */
 	function uninstall()
 	{
