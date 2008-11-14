@@ -41,7 +41,12 @@ class WPSC_StockCounter
 	 */ 
 	function __construct()
 	{
-		$this->plugin_url = get_bloginfo( 'wpurl' )."/".PLUGINDIR.'/'.basename(__FILE__, ".php");
+		if ( !defined( 'WP_CONTENT_URL' ) )
+			define( 'WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content' );
+		if ( !defined( 'WP_PLUGIN_URL' ) )
+			define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
+	
+		$this->plugin_url = WP_PLUGIN_URL.'/'.basename(__FILE__, ".php");
 		$this->getProducts();
 	}
 	function WPSC_StockCounter()
