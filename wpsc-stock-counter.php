@@ -292,7 +292,7 @@ $wpsc_stock_counter = new WPSC_StockCounter();
 register_activation_hook(__FILE__, array(&$wpsc_stock_counter, 'init') );
 add_action( 'admin_menu', array(&$wpsc_stock_counter, 'addAdminMenu') );
 
-load_plugin_textdomain( 'wpsc-stock-counter', $path = WP_PLUGIN_DIR.'/'.basename(__FILE__, ".php")  );
+load_plugin_textdomain( 'wpsc-stock-counter', $path = PLUGINDIR.'/'.basename(__FILE__, ".php")  );
 
 // Uninstallation for WP 2.7
 if ( function_exists('register_uninstall_hook') )
