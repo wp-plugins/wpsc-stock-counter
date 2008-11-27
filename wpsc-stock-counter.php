@@ -46,7 +46,7 @@ class WPSC_StockCounter
 		if ( !defined( 'WP_PLUGIN_URL' ) )
 			define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
 	
-		$this->plugin_url = WP_PLUGIN_URL.'/'.dirname(plugin_basename(__FILE__));
+		$this->plugin_url = WP_PLUGIN_URL.'/'.basename(__FILE__, '.php');
 		$this->getProducts();
 	}
 	
@@ -225,7 +225,7 @@ class WPSC_StockCounter
 	 * @param none
 	 * @return void
 	 */
-	public function init()
+	public function activate()
 	{
 		$options = array();
 		add_option( 'wpsc-stock-counter', $options, 'DTL Ticketing Options', 'yes' );
@@ -262,9 +262,10 @@ class WPSC_StockCounter
 	 */
 	public function addAdminMenu()
 	{
+		$plugin = basename(__FILE__,'.php').'/'.basename(__FILE__);
 	 	$mypage = add_submenu_page( 'wp-shopping-cart/display-log.php', __( 'Stock Counter', 'wpsc-stock-counter' ), __( 'Stock Counter', 'wpsc-stock-counter' ), 'view_stock_counter', basename(__FILE__), array(&$this, 'printAdminPage') );
 		add_action( "admin_print_scripts-$mypage", array(&$this, 'addHeaderCode') );
-		add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( &$this, 'pluginActions' ) );
+		add_filter( 'plugin_action_links_' . $plugin, array( &$this, 'pluginActions' ) );
 	}
 	 
 	 
@@ -276,7 +277,7 @@ class WPSC_StockCounter
 	 */
 	public function pluginActions( $links )
 	{
-		$settings_link = '<a href="chcounter-widget.php">' . __('Settings') . '</a>';
+		$settings_link = '<a href="admin.php?page='.basename(__FILE__).'">' . __('Settings') . '</a>';
 		array_unshift( $links, $settings_link );
 	
 		return $links;
@@ -297,10 +298,10 @@ class WPSC_StockCounter
 
 $wpsc_stock_counter = new WPSC_StockCounter();
 
-register_activation_hook(__FILE__, array(&$wpsc_stock_counter, 'init') );
+register_activation_hook(__FILE__, array(&$wpsc_stock_counter, 'activate') );
 add_action( 'admin_menu', array(&$wpsc_stock_counter, 'addAdminMenu') );
 
-load_plugin_textdomain( 'chcounter', false, dirname(plugin_basename(__FILE__)).'/languages' );
+load_plugin_textdomain( 'wpsc-dta-export', false, basename(__FILE__, '.php').'/languages' );
 
 // Uninstallation for WP 2.7
 if ( function_exists('register_uninstall_hook') )
