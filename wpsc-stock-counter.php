@@ -3,7 +3,7 @@
 Plugin Name: WPSC Stock Counter
 Plugin URI: http://wordpress.org/extend/plugins/wpsc-stock-counter/
 Description: Plugin for <a href="http://www.instinct.co.nz">Wordpress Shopping Cart</a> to count product stock. Products can be combined to be counted together.
-Version: 1.1.2
+Version: 1.2-testing
 Author: Kolja Schleich
 
 Copyright 2007-2008  Kolja Schleich  (email : kolja.schleich@googlemail.com)
@@ -30,7 +30,7 @@ class WPSC_StockCounter
 	 *
 	 * @var array
 	 */
-	var $products = array();
+	private $products = array();
 		
 		
 	/**
@@ -39,23 +39,15 @@ class WPSC_StockCounter
 	 * @param none
 	 * @return void
 	 */ 
-	function __construct()
+	public function __construct()
 	{
 		if ( !defined( 'WP_CONTENT_URL' ) )
 			define( 'WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content' );
 		if ( !defined( 'WP_PLUGIN_URL' ) )
 			define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
-		if ( !defined( 'WP_CONTENT_DIR' ) )
-			define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
-		if ( !defined( 'WP_PLUGIN_DIR' ) )
-			define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
 	
-		$this->plugin_url = WP_PLUGIN_URL.'/'.basename(__FILE__, ".php");
+		$this->plugin_url = WP_PLUGIN_URL.'/'.dirname(plugin_basename(__FILE__));
 		$this->getProducts();
-	}
-	function WPSC_StockCounter()
-	{
-		$this->__construct();
 	}
 	
 
@@ -65,7 +57,7 @@ class WPSC_StockCounter
 	 * @param none
 	 * @return void
 	 */
-	function getProducts()
+	private function getProducts()
 	{
 		global $wpdb;
 
@@ -87,7 +79,7 @@ class WPSC_StockCounter
 	 * @param int $pid
 	 * @return int
 	 */
-	function getSoldTickets( $pid )
+	private function getSoldTickets( $pid )
 	{
 		global $wpdb;
 		
@@ -118,7 +110,7 @@ class WPSC_StockCounter
 	 * @param int $pid
 	 * @return void
 	 */
-	function getProductMeta( $pid )
+	private function getProductMeta( $pid )
 	{
 		$options = get_option( 'wpsc-stock-counter' );
 		
@@ -142,7 +134,7 @@ class WPSC_StockCounter
 	 * @param none
 	 * @return void
 	 */
-	function printAdminPage()
+	public function printAdminPage()
 	{
 		global $wpdb;
 		
@@ -233,7 +225,7 @@ class WPSC_StockCounter
 	 * @param none
 	 * @return void
 	 */
-	function init()
+	public function init()
 	{
 		$options = array();
 		add_option( 'wpsc-stock-counter', $options, 'DTL Ticketing Options', 'yes' );
@@ -251,12 +243,12 @@ class WPSC_StockCounter
 	
 	
 	/**
-	* adds code to Wordpress head
-	*
-	* @param none
-	* @return void
-	*/
-	function addHeaderCode()
+	 * adds code to Wordpress head
+	 *
+	 * @param none
+	 * @return void
+	 */
+	public function addHeaderCode()
 	{
 		wp_print_scripts( 'prototype' );
 	}
@@ -268,20 +260,36 @@ class WPSC_StockCounter
 	 * @param none
 	 * @return void
 	 */
-	 function addAdminMenu()
-	 {
+	public function addAdminMenu()
+	{
 	 	$mypage = add_submenu_page( 'wp-shopping-cart/display-log.php', __( 'Stock Counter', 'wpsc-stock-counter' ), __( 'Stock Counter', 'wpsc-stock-counter' ), 'view_stock_counter', basename(__FILE__), array(&$this, 'printAdminPage') );
 		add_action( "admin_print_scripts-$mypage", array(&$this, 'addHeaderCode') );
-	 }
+		add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( &$this, 'pluginActions' ) );
+	}
 	 
 	 
 	/**
-	 * Uninstall Plugin for WP 2.7
+	 * pluginActions() - display link to settings page in plugin table
+	 *
+	 * @param array $links array of action links
+	 * @return void
+	 */
+	public function pluginActions( $links )
+	{
+		$settings_link = '<a href="chcounter-widget.php">' . __('Settings') . '</a>';
+		array_unshift( $links, $settings_link );
+	
+		return $links;
+	}
+	
+	
+	/**
+	 * Uninstall Plugin
 	 *
 	 * @param none
 	 * @return void
 	 */
-	function uninstall()
+	public function uninstall()
 	{
 	 	delete_option( 'wpsc-stock-counter' );
 	}
@@ -292,7 +300,7 @@ $wpsc_stock_counter = new WPSC_StockCounter();
 register_activation_hook(__FILE__, array(&$wpsc_stock_counter, 'init') );
 add_action( 'admin_menu', array(&$wpsc_stock_counter, 'addAdminMenu') );
 
-load_plugin_textdomain( 'wpsc-stock-counter', $path = PLUGINDIR.'/'.basename(__FILE__, ".php").'/languages'  );
+load_plugin_textdomain( 'chcounter', false, dirname(plugin_basename(__FILE__)).'/languages' );
 
 // Uninstallation for WP 2.7
 if ( function_exists('register_uninstall_hook') )
