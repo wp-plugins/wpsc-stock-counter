@@ -263,7 +263,8 @@ class WPSC_StockCounter
 	public function addAdminMenu()
 	{
 		$plugin = basename(__FILE__,'.php').'/'.basename(__FILE__);
-		$menu_title = "<img src='".$this->plugin_url."/icon.gif' alt='' /> ".__( 'Stock Counter', 'wpsc-stock-counter' );
+		//$menu_title = "<img src='".$this->plugin_url."/icon.gif' alt='' /> ".__( 'Stock Counter', 'wpsc-stock-counter' );
+		$menu_title = __( 'Stock Counter', 'wpsc-stock-counter' );
 	 	$mypage = add_submenu_page( 'wp-shopping-cart/display-log.php', __( 'Stock Counter', 'wpsc-stock-counter' ), $menu_title, 'view_stock_counter', basename(__FILE__), array(&$this, 'printAdminPage') );
 		add_action( "admin_print_scripts-$mypage", array(&$this, 'addHeaderCode') );
 		add_filter( 'plugin_action_links_' . $plugin, array( &$this, 'pluginActions' ) );
