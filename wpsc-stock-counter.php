@@ -138,15 +138,15 @@ class WPSC_StockCounter
 	{
 		global $wpdb;
 		
-		$options = get_option( 'wpsc-stock-counter' );
 		if ( isset( $_POST['updateEventsCounter'] ) && current_user_can('edit_stock_counter_settings') ) {
 			check_admin_referer( 'wpsc-stock-counter-update-settings_stock' );
 
+			$options = get_option( 'wpsc-stock-counter' );
 			foreach ( $_POST['products'] AS $pid => $data ) {
 				$options['products'][$pid] = $data;
 			}
 			update_option( 'wpsc-stock-counter', $options );
-		
+			
 			echo '<div id="message" class="updated fade"><p><strong>'.__( 'Settings saved', 'wpsc-stock-counter' ) .'</strong></p></div>';
 			$this->getProducts();
 		}
