@@ -197,7 +197,7 @@ class WPSC_StockCounter
 						<th scope="col"><?php _e( 'Connected Products', 'wpsc-stock-counter' ) ?>*</th>
 					</tr>
 				</thead>
-				<tbody id="the-list">
+				<tbody id="the-list" class="form-table">
 					<?php foreach ( $this->products AS $pid => $data ) : $selected = ( $this->products[$pid]['count'] == 1 ) ? " checked='checked'" : ''; ?>
 					<?php $class = ( 'alternate' == $class ) ? '' : 'alternate'; ?>
 					<tr class="<?php echo $class ?>">
