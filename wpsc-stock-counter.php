@@ -303,7 +303,7 @@ $wpsc_stock_counter = new WPSC_StockCounter();
 register_activation_hook(__FILE__, array(&$wpsc_stock_counter, 'activate') );
 add_action( 'admin_menu', array(&$wpsc_stock_counter, 'addAdminMenu') );
 
-load_plugin_textdomain( 'wpsc-dta-export', false, basename(__FILE__, '.php').'/languages' );
+load_plugin_textdomain( 'wpsc-stock-counter', false, basename(__FILE__, '.php').'/languages' );
 
 // Uninstallation for WP 2.7
 if ( function_exists('register_uninstall_hook') )
