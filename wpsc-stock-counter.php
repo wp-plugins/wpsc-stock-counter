@@ -34,28 +34,48 @@ class WPSC_StockCounter
 		
 		
 	/**
-	 * initialize class
+	 * class constructor
 	 *
 	 * @param none
 	 * @return void
 	 */ 
 	public function __construct()
 	{
+		$this->initialize();
+	}
+	
+	
+	/**
+	 * initialize plugin: define constants, register hooks and actions
+	 * 
+	 * @param none
+	 * @return void
+	 */
+	private function initialize()
+	{
 		if ( !defined( 'WP_CONTENT_URL' ) )
 			define( 'WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content' );
 		if ( !defined( 'WP_PLUGIN_URL' ) )
 			define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
-	
+		
+		register_activation_hook(__FILE__, array(&$this, 'activate') );
+		load_plugin_textdomain( 'wpsc-stock-counter', false, basename(__FILE__, '.php').'/languages' );
+		add_action( 'admin_menu', array(&$this, 'addAdminMenu') );
+
+		// Uninstallation for WP 2.7
+		if ( function_exists('register_uninstall_hook') )
+		register_uninstall_hook(__FILE__, array(&$this, 'uninstall'));
+			
 		$this->plugin_url = WP_PLUGIN_URL.'/'.basename(__FILE__, '.php');
 		$this->getProducts();
 	}
 	
 
 	/**
-	 * gets products list from database and save them in class
+	 * gets products list from database 
 	 *
 	 * @param none
-	 * @return void
+	 * @return boolean
 	 */
 	private function getProducts()
 	{
@@ -67,16 +87,17 @@ class WPSC_StockCounter
 				$this->products[$product->id]['name'] = $product->name;
 				$this->getProductMeta( $product->id );
 			}
+			return true;
 		}
 
-		return;
+		return false;
 	}
 
 
 	/**
 	 * gets number of sold objects for given product
 	 *
-	 * @param int $pid
+	 * @param int $pid ID of product
 	 * @return int
 	 */
 	private function getSoldTickets( $pid )
@@ -105,9 +126,9 @@ class WPSC_StockCounter
 
 		
 	/**
-	 * gets product data for given product and save them in class
+	 * gets product data for given product
 	 *
-	 * @param int $pid
+	 * @param int $pid ID of product
 	 * @return void
 	 */
 	private function getProductMeta( $pid )
@@ -123,8 +144,6 @@ class WPSC_StockCounter
 			$this->products[$pid]['sold'] = $sold;
 			$this->products[$pid]['remaining'] = $this->products[$pid]['limit'] - $sold;
 		}
-
-		return;
 	}
 
 
@@ -135,9 +154,7 @@ class WPSC_StockCounter
 	 * @return void
 	 */
 	public function printAdminPage()
-	{
-		global $wpdb;
-		
+	{		
 		if ( isset( $_POST['updateEventsCounter'] ) && current_user_can('edit_stock_counter_settings') ) {
 			check_admin_referer( 'wpsc-stock-counter-update-settings_stock' );
 
@@ -263,8 +280,7 @@ class WPSC_StockCounter
 	public function addAdminMenu()
 	{
 		$plugin = basename(__FILE__,'.php').'/'.basename(__FILE__);
-		//$menu_title = "<img src='".$this->plugin_url."/icon.gif' alt='' /> ".__( 'Stock Counter', 'wpsc-stock-counter' );
-		$menu_title = __( 'Stock Counter', 'wpsc-stock-counter' );
+		$menu_title = "<img src='".$this->plugin_url."/icon.gif' alt='' /> ".__( 'Stock Counter', 'wpsc-stock-counter' );
 	 	$mypage = add_submenu_page( 'wp-shopping-cart/display-log.php', __( 'Stock Counter', 'wpsc-stock-counter' ), $menu_title, 'view_stock_counter', basename(__FILE__), array(&$this, 'printAdminPage') );
 		add_action( "admin_print_scripts-$mypage", array(&$this, 'addHeaderCode') );
 		add_filter( 'plugin_action_links_' . $plugin, array( &$this, 'pluginActions' ) );
@@ -272,10 +288,10 @@ class WPSC_StockCounter
 	 
 	 
 	/**
-	 * pluginActions() - display link to settings page in plugin table
+	 * display link to settings page in plugin table
 	 *
 	 * @param array $links array of action links
-	 * @return void
+	 * @return new array of plugin actions
 	 */
 	public function pluginActions( $links )
 	{
@@ -298,14 +314,6 @@ class WPSC_StockCounter
 	}
 }
 
+// Run the plugin
 $wpsc_stock_counter = new WPSC_StockCounter();
-
-register_activation_hook(__FILE__, array(&$wpsc_stock_counter, 'activate') );
-add_action( 'admin_menu', array(&$wpsc_stock_counter, 'addAdminMenu') );
-
-load_plugin_textdomain( 'wpsc-stock-counter', false, basename(__FILE__, '.php').'/languages' );
-
-// Uninstallation for WP 2.7
-if ( function_exists('register_uninstall_hook') )
-	register_uninstall_hook(__FILE__, array(&$wpsc_stock_counter, 'uninstall'));
 ?>

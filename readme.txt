@@ -28,6 +28,5 @@ To install the plugin to the following steps
 
 None so far.
 
-
 == Screenshots ==
 1. Administration Page
