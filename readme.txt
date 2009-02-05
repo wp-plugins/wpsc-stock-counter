@@ -28,5 +28,8 @@ To install the plugin to the following steps
 
 None so far.
 
+== Credits ==
+The WPSC Stock Counter icon is adapted from the Fugue Icons of http://www.pinvoke.com/.
+
 == Screenshots ==
 1. Administration Page
