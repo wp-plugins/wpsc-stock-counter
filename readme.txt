@@ -22,7 +22,7 @@ To install the plugin to the following steps
 
 1. Unzip the zip-file and upload the content to your Wordpress Plugin directory.
 2. Activiate the plugin via the admin plugin page.
-3. Go to Manage -> League to add and manage leagues
+3. Go to Shopping Cart -> Stock Counter
 
 == Frequently Asked Questions == 
 
