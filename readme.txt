@@ -16,6 +16,8 @@ This Plugin is for the [Shopping Cart Plugin](http://wordpress.org/extend/plugin
 
 * German
 
+Due to the growing popularity of my plugins I have launched a [website](http://kolja.galerie-neander.de/)!
+
 == Installation ==
 
 To install the plugin to the following steps

@@ -1,9 +1,10 @@
 <?php
 /*
 Plugin Name: WPSC Stock Counter
-Plugin URI: http://wordpress.org/extend/plugins/wpsc-stock-counter/
+Author URI: http://kolja.galerie-neander.de
+Plugin URI: http://kolja.galerie-neander.de/plugins/#wpsc-stock-counter
 Description: Plugin for <a href="http://www.instinct.co.nz">Wordpress Shopping Cart</a> to count product stock. Products can be combined to be counted together.
-Version: 1.1.2
+Version: 1.2
 Author: Kolja Schleich
 
 Copyright 2007-2008  Kolja Schleich  (email : kolja.schleich@googlemail.com)
@@ -26,39 +27,58 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 class WPSC_StockCounter
 {
 	/**
-	 * This Array includes all products together with options
+	 * all products with options
 	 *
 	 * @var array
 	 */
-	var $products = array();
+	private $products = array();
 		
 		
 	/**
-	 * initialize class
+	 * class constructor
 	 *
 	 * @param none
 	 * @return void
 	 */ 
-	function __construct()
+	public function __construct()
 	{
-		$this->plugin_url = get_bloginfo( 'wpurl' )."/".PLUGINDIR.'/'.basename(__FILE__, ".php");
-		$this->getProducts();
-
-		return;
+		$this->initialize();
 	}
-	function WPSC_StockCounter()
+	
+	
+	/**
+	 * initialize plugin: define constants, register hooks and actions
+	 * 
+	 * @param none
+	 * @return void
+	 */
+	private function initialize()
 	{
-		$this->__construct();
+		if ( !defined( 'WP_CONTENT_URL' ) )
+			define( 'WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content' );
+		if ( !defined( 'WP_PLUGIN_URL' ) )
+			define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
+		
+		register_activation_hook(__FILE__, array(&$this, 'activate') );
+		load_plugin_textdomain( 'wpsc-stock-counter', false, basename(__FILE__, '.php').'/languages' );
+		add_action( 'admin_menu', array(&$this, 'addAdminMenu') );
+
+		// Uninstallation for WP 2.7
+		if ( function_exists('register_uninstall_hook') )
+		register_uninstall_hook(__FILE__, array(&$this, 'uninstall'));
+			
+		$this->plugin_url = WP_PLUGIN_URL.'/'.basename(__FILE__, '.php');
+		$this->getProducts();
 	}
 	
 
 	/**
-	 * gets products list from database and save them in class
+	 * gets products list from database 
 	 *
 	 * @param none
-	 * @return void
+	 * @return boolean
 	 */
-	function getProducts()
+	private function getProducts()
 	{
 		global $wpdb;
 
@@ -68,19 +88,20 @@ class WPSC_StockCounter
 				$this->products[$product->id]['name'] = $product->name;
 				$this->getProductMeta( $product->id );
 			}
+			return true;
 		}
 
-		return;
+		return false;
 	}
 
 
 	/**
 	 * gets number of sold objects for given product
 	 *
-	 * @param int $pid
+	 * @param int $pid ID of product
 	 * @return int
 	 */
-	function getSoldTickets( $pid )
+	private function getSoldTickets( $pid )
 	{
 		global $wpdb;
 		
@@ -106,12 +127,12 @@ class WPSC_StockCounter
 
 		
 	/**
-	 * gets product data for given product and save them in class
+	 * gets product data for given product
 	 *
-	 * @param int $pid
+	 * @param int $pid ID of product
 	 * @return void
 	 */
-	function getProductMeta( $pid )
+	private function getProductMeta( $pid )
 	{
 		$options = get_option( 'wpsc-stock-counter' );
 		
@@ -124,8 +145,6 @@ class WPSC_StockCounter
 			$this->products[$pid]['sold'] = $sold;
 			$this->products[$pid]['remaining'] = $this->products[$pid]['limit'] - $sold;
 		}
-
-		return;
 	}
 
 
@@ -133,21 +152,19 @@ class WPSC_StockCounter
 	 * prints admin page
 	 *
 	 * @param none
-	 * @return none
+	 * @return void
 	 */
-	function printAdminPage()
-	{
-		global $wpdb;
-		
-		$options = get_option( 'wpsc-stock-counter' );
+	public function printAdminPage()
+	{		
 		if ( isset( $_POST['updateEventsCounter'] ) && current_user_can('edit_stock_counter_settings') ) {
 			check_admin_referer( 'wpsc-stock-counter-update-settings_stock' );
 
+			$options = get_option( 'wpsc-stock-counter' );
 			foreach ( $_POST['products'] AS $pid => $data ) {
 				$options['products'][$pid] = $data;
 			}
 			update_option( 'wpsc-stock-counter', $options );
-		
+			
 			echo '<div id="message" class="updated fade"><p><strong>'.__( 'Settings saved', 'wpsc-stock-counter' ) .'</strong></p></div>';
 			$this->getProducts();
 		}
@@ -198,7 +215,7 @@ class WPSC_StockCounter
 						<th scope="col"><?php _e( 'Connected Products', 'wpsc-stock-counter' ) ?>*</th>
 					</tr>
 				</thead>
-				<tbody id="the-list">
+				<tbody id="the-list" class="form-table">
 					<?php foreach ( $this->products AS $pid => $data ) : $selected = ( $this->products[$pid]['count'] == 1 ) ? " checked='checked'" : ''; ?>
 					<?php $class = ( 'alternate' == $class ) ? '' : 'alternate'; ?>
 					<tr class="<?php echo $class ?>">
@@ -221,12 +238,12 @@ class WPSC_StockCounter
 
 		
 	/**
-	 * Initialize Plugin
+	 * Activate Plugin
 	 *
 	 * @param none
 	 * @return void
 	 */
-	function init()
+	public function activate()
 	{
 		$options = array();
 		add_option( 'wpsc-stock-counter', $options, 'DTL Ticketing Options', 'yes' );
@@ -240,17 +257,16 @@ class WPSC_StockCounter
 		
 		$role = get_role('editor');
 		$role->add_cap('view_stock_counter');
-		
-		return;
 	}
 	
 	
 	/**
-	* adds code to Wordpress head
-	*
-	* @param none
-	*/
-	function addHeaderCode()
+	 * adds code to Wordpress head
+	 *
+	 * @param none
+	 * @return void
+	 */
+	public function addHeaderCode()
 	{
 		wp_print_scripts( 'prototype' );
 	}
@@ -260,34 +276,45 @@ class WPSC_StockCounter
 	 * adds admin menu
 	 *
 	 * @param none
-	 * @return none
+	 * @return void
 	 */
-	 function addAdminMenu()
-	 {
-	 	$mypage = add_submenu_page( 'wp-shopping-cart/display-log.php', __( 'Stock Counter', 'wpsc-stock-counter' ), __( 'Stock Counter', 'wpsc-stock-counter' ), 'view_stock_counter', basename(__FILE__), array(&$this, 'printAdminPage') );
+	public function addAdminMenu()
+	{
+		$plugin = basename(__FILE__,'.php').'/'.basename(__FILE__);
+		$menu_title = "<img src='".$this->plugin_url."/icon.png' alt='' /> ".__( 'Stock Counter', 'wpsc-stock-counter' );
+	 	$mypage = add_submenu_page( 'wp-shopping-cart/display-log.php', __( 'Stock Counter', 'wpsc-stock-counter' ), $menu_title, 'view_stock_counter', basename(__FILE__), array(&$this, 'printAdminPage') );
 		add_action( "admin_print_scripts-$mypage", array(&$this, 'addHeaderCode') );
-	 }
+		add_filter( 'plugin_action_links_' . $plugin, array( &$this, 'pluginActions' ) );
+	}
 	 
 	 
 	/**
-	 * Uninstall Plugin for WP 2.7
+	 * display link to settings page in plugin table
+	 *
+	 * @param array $links array of action links
+	 * @return new array of plugin actions
+	 */
+	public function pluginActions( $links )
+	{
+		$settings_link = '<a href="admin.php?page='.basename(__FILE__).'">' . __('Settings') . '</a>';
+		array_unshift( $links, $settings_link );
+	
+		return $links;
+	}
+	
+	
+	/**
+	 * Uninstall Plugin
 	 *
 	 * @param none
+	 * @return void
 	 */
-	function uninstall()
+	public function uninstall()
 	{
 	 	delete_option( 'wpsc-stock-counter' );
 	}
 }
 
+// Run the plugin
 $wpsc_stock_counter = new WPSC_StockCounter();
-
-register_activation_hook(__FILE__, array(&$wpsc_stock_counter, 'init') );
-add_action( 'admin_menu', array(&$wpsc_stock_counter, 'addAdminMenu') );
-
-load_plugin_textdomain( 'chcounter', false, dirname(plugin_basename(__FILE__)).'/languages' );
-
-// Uninstallation for WP 2.7
-if ( function_exists('register_uninstall_hook') )
-	register_uninstall_hook(__FILE__, array(&$wpsc_stock_counter, 'uninstall'));
 ?>
