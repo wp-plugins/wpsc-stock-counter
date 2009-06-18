@@ -4,7 +4,7 @@ Plugin Name: WPSC Stock Counter
 Author URI: http://kolja.galerie-neander.de
 Plugin URI: http://kolja.galerie-neander.de/plugins/#wpsc-stock-counter
 Description: Plugin for <a href="http://www.instinct.co.nz">Wordpress Shopping Cart</a> to count product stock. Products can be combined to be counted together.
-Version: 1.2
+Version: 1.3
 Author: Kolja Schleich
 
 Copyright 2007-2008  Kolja Schleich  (email : kolja.schleich@googlemail.com)
@@ -172,7 +172,7 @@ class WPSC_StockCounter
 		<div class="wrap">
 			<h2><?php _e( 'Stock Summary', 'wpsc-stock-counter' ) ?></h2>
 			<?php if ( current_user_can('edit_stock_counter_settings') ) : ?>
-				<p style="margin-bottom: 0;"><a href="#" onclick="Element.show('wpsc-stock-counter-settings')"><?php _e( 'Show Settings', 'wpsc-stock-counter' ) ?></a></p>
+				<p style="margin-bottom: 0;"><a href="#" onclick="jQuery('div#wpsc-stock-counter-settings').fadeIn('fast');"><?php _e( 'Show Settings', 'wpsc-stock-counter' ) ?></a></p>
 			<?php endif; ?>
 			
 			<table class="widefat" style="margin-top: 1em;">
@@ -200,7 +200,7 @@ class WPSC_StockCounter
 		<?php if ( current_user_can('edit_stock_counter_settings') ) : ?>
 		<div class="wrap" id="wpsc-stock-counter-settings" style="display: none;">
 			<h2><?php _e( 'Settings', 'wpsc-stock-counter' ) ?></h2>
-			<p><a href="#" onclick="Element.hide('wpsc-stock-counter-settings')"><?php _e( 'Hide Settings', 'wpsc-stock-counter' ) ?></a></p>
+			<p><a href="#" onclick="jQuery('div#wpsc-stock-counter-settings').fadeOut('fast');"><?php _e( 'Hide Settings', 'wpsc-stock-counter' ) ?></a></p>
 			
 			<form action="" method="post">
 				<?php wp_nonce_field( 'wpsc-stock-counter-update-settings_stock' ) ?>
@@ -268,7 +268,7 @@ class WPSC_StockCounter
 	 */
 	public function addHeaderCode()
 	{
-		wp_print_scripts( 'prototype' );
+		wp_print_scripts( 'jquery' );
 	}
 	
 	
@@ -281,8 +281,10 @@ class WPSC_StockCounter
 	public function addAdminMenu()
 	{
 		$plugin = basename(__FILE__,'.php').'/'.basename(__FILE__);
-		$menu_title = "<img src='".$this->plugin_url."/icon.png' alt='' /> ".__( 'Stock Counter', 'wpsc-stock-counter' );
-	 	$mypage = add_submenu_page( 'wp-shopping-cart/display-log.php', __( 'Stock Counter', 'wpsc-stock-counter' ), $menu_title, 'view_stock_counter', basename(__FILE__), array(&$this, 'printAdminPage') );
+//		$menu_title = "<img src='".$this->plugin_url."/icon.png' alt='' /> ".;
+		$menu_title = __( 'Stock Counter', 'wpsc-stock-counter' );
+
+	 	$mypage = add_submenu_page( WPSC_DIR_NAME.'/display-log.php', __( 'Stock Counter', 'wpsc-stock-counter' ), $menu_title, 'view_stock_counter', basename(__FILE__), array(&$this, 'printAdminPage') );
 		add_action( "admin_print_scripts-$mypage", array(&$this, 'addHeaderCode') );
 		add_filter( 'plugin_action_links_' . $plugin, array( &$this, 'pluginActions' ) );
 	}
