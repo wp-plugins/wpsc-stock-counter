@@ -35,3 +35,7 @@ The WPSC Stock Counter icon is adapted from the Fugue Icons of http://www.pinvok
 
 == Screenshots ==
 1. Administration Page
+
+== Changelog ==
+
+None
