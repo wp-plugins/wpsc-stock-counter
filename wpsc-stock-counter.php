@@ -4,7 +4,7 @@ Plugin Name: WPSC Stock Counter
 Author URI: http://kolja.galerie-neander.de
 Plugin URI: http://kolja.galerie-neander.de/plugins/#wpsc-stock-counter
 Description: Plugin for <a href="http://www.instinct.co.nz">Wordpress Shopping Cart</a> to count product stock. Products can be combined to be counted together.
-Version: 1.3
+Version: 1.4
 Author: Kolja Schleich
 
 Copyright 2007-2008  Kolja Schleich  (email : kolja.schleich@googlemail.com)
@@ -82,7 +82,7 @@ class WPSC_StockCounter
 	{
 		global $wpdb;
 
-		$products = $wpdb->get_results( "SELECT `id`, `name` FROM wp_product_list ORDER BY id ASC" );
+		$products = $wpdb->get_results( "SELECT `id`, `name` FROM {$wpdb->prefix}wpsc_product_list ORDER BY id ASC" );
 		if ( $products ) {
 			foreach ( $products AS $product ) {
 				$this->products[$product->id]['name'] = $product->name;
@@ -106,7 +106,7 @@ class WPSC_StockCounter
 		global $wpdb;
 		
 		$sold = 0;
-		$tickets = $wpdb->get_results( "SELECT `quantity` FROM wp_cart_contents WHERE `prodid` = '".$pid."'" );
+		$tickets = $wpdb->get_results( "SELECT `quantity` FROM {$wpdb->prefix}wpsc_cart_contents WHERE `prodid` = '".$pid."'" );
 		if ( $tickets ) {
 			foreach ( $tickets AS $ticket )
 				$sold += $ticket->quantity;
@@ -114,7 +114,7 @@ class WPSC_StockCounter
 		if ( $this->products[$pid]['linked_products'] != '' ) {
 			$linked_products = explode( ',', $this->products[$pid]['linked_products'] );
 			foreach ( $linked_products AS $l_pid ) {
-				$tickets = $wpdb->get_results( "SELECT `quantity` FROM wp_cart_contents WHERE `prodid` = '".$l_pid."'" );
+				$tickets = $wpdb->get_results( "SELECT `quantity` FROM {$wpdb->prefix}wpsc_cart_contents WHERE `prodid` = '".$l_pid."'" );
 				if ( $tickets ) {
 					foreach ( $tickets AS $ticket ) {
 						$sold += $ticket->quantity;
@@ -284,7 +284,7 @@ class WPSC_StockCounter
 //		$menu_title = "<img src='".$this->plugin_url."/icon.png' alt='' /> ".;
 		$menu_title = __( 'Stock Counter', 'wpsc-stock-counter' );
 
-	 	$mypage = add_submenu_page( WPSC_DIR_NAME.'/display-log.php', __( 'Stock Counter', 'wpsc-stock-counter' ), $menu_title, 'view_stock_counter', basename(__FILE__), array(&$this, 'printAdminPage') );
+	 	$mypage = add_submenu_page( 'wpsc-sales-logs', __( 'Stock Counter', 'wpsc-stock-counter' ), $menu_title, 'view_stock_counter', basename(__FILE__), array(&$this, 'printAdminPage') );
 		add_action( "admin_print_scripts-$mypage", array(&$this, 'addHeaderCode') );
 		add_filter( 'plugin_action_links_' . $plugin, array( &$this, 'pluginActions' ) );
 	}

@@ -3,14 +3,14 @@ Contributors: Kolja Schleich
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2329191
 Tags: shopping cart, tickets, shop, e-commerce, stock counter
 Requires at least: 2.3
-Tested up to: 2.8
-Stable tag: 1.3
+Tested up to: 2.8.4
+Stable tag: 1.4
 
 Plugin for the [Shopping Cart Plugin](http://wordpress.org/extend/plugins/wp-e-commerce/) to count stock also of connected products.
 
 == Description ==
 
-This Plugin is for the [Shopping Cart Plugin](http://wordpress.org/extend/plugins/wp-e-commerce/) to count the product stock. Different products can be connected via a comma separated list of their IDs to be counted together.
+This Plugin is for the [Shopping Cart Plugin](http://wordpress.org/extend/plugins/wp-e-commerce/) to count the product stock. Different products can be connected via a comma separated list of their IDs to be counted together. Works with wp-e-commerce 3.7.4.
 
 **Translations**
 
