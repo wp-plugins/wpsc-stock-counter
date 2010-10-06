@@ -1,8 +1,7 @@
 <?php
 /*
 Plugin Name: WPSC Stock Counter
-Author URI: http://kolja.galerie-neander.de
-Plugin URI: http://kolja.galerie-neander.de/plugins/#wpsc-stock-counter
+Plugin URI: http://wordpress.org/extend/plugins/wpsc-stock-counter
 Description: Plugin for <a href="http://www.instinct.co.nz">Wordpress Shopping Cart</a> to count product stock. Products can be combined to be counted together.
 Version: 1.4
 Author: Kolja Schleich
