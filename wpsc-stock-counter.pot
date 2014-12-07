@@ -27,7 +27,7 @@ msgid "Show Settings"
 msgstr ""
 
 #: wpsc-stock-counter.php:163 wpsc-stock-counter.php:194
-msgid "Event"
+msgid "Product"
 msgstr ""
 
 #: wpsc-stock-counter.php:164
@@ -71,5 +71,5 @@ msgid "Save Settings"
 msgstr ""
 
 #: wpsc-stock-counter.php:266 wpsc-stock-counter.php:267
-msgid "Stock Counter"
+msgid "Shop Stock Counter"
 msgstr ""

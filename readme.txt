@@ -2,14 +2,14 @@
 Contributors: Kolja Schleichs
 Tags: shopping cart, tickets, shop, e-commerce, stock counter
 Requires at least: 2.3
-Tested up to: 2.8.4
-Stable tag: 1.4
+Tested up to: 4.0.1
+Stable tag: 1.5
 
-Plugin for the [Shopping Cart Plugin](http://wordpress.org/extend/plugins/wp-e-commerce/) to count stock also of connected products.
+Plugin for the [WP E-Commerce Plugin](http://wordpress.org/extend/plugins/wp-e-commerce/) to count stock also of connected products.
 
 == Description ==
 
-This Plugin is for the [Shopping Cart Plugin](http://wordpress.org/extend/plugins/wp-e-commerce/) to count the product stock. Different products can be connected via a comma separated list of their IDs to be counted together. Works with wp-e-commerce 3.7.4.
+This Plugin is for the [WP E-Commerce Plugin](http://wordpress.org/extend/plugins/wp-e-commerce/) to count the product stock. Different products can be connected via a comma separated list of their IDs to be counted together. Works with WP E-Commerce 3.9.
 
 **Translations**
 
@@ -35,4 +35,9 @@ The WPSC Stock Counter icon is adapted from the Fugue Icons of http://www.pinvok
 
 == Changelog ==
 
-None
+= 1.5 =
+* NEW: Compatible with Wordpress 4.0.1 and WP E-Commerce 3.9
+* BUGFIX: escape html specialchars in $_POST variables for security
+
+= 1.0 - 1.4 =
+* First versions for WP E-commerce 3.7.4.

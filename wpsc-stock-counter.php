@@ -2,11 +2,11 @@
 /*
 Plugin Name: WPSC Stock Counter
 Plugin URI: http://wordpress.org/extend/plugins/wpsc-stock-counter
-Description: Plugin for <a href="http://www.instinct.co.nz">Wordpress Shopping Cart</a> to count product stock. Products can be combined to be counted together.
-Version: 1.4
+Description: Plugin for <a href="https://wordpress.org/plugins/wp-e-commerce/">Wordpress Shopping Cart</a> to count product stock. Products can be combined to be counted together.
+Version: 1.5
 Author: Kolja Schleich
 
-Copyright 2007-2008  Kolja Schleich  (email : kolja.schleich@googlemail.com)
+Copyright 2007-2014  Kolja Schleich  (email : kolja [dot] schleich [at] googlemail.com)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,24 +34,12 @@ class WPSC_StockCounter
 		
 		
 	/**
-	 * class constructor
+	 * class constructor. initialize plugin: define constants, register hooks and actions
 	 *
 	 * @param none
 	 * @return void
 	 */ 
 	public function __construct()
-	{
-		$this->initialize();
-	}
-	
-	
-	/**
-	 * initialize plugin: define constants, register hooks and actions
-	 * 
-	 * @param none
-	 * @return void
-	 */
-	private function initialize()
 	{
 		if ( !defined( 'WP_CONTENT_URL' ) )
 			define( 'WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content' );
@@ -81,11 +69,11 @@ class WPSC_StockCounter
 	{
 		global $wpdb;
 
-		$products = $wpdb->get_results( "SELECT `id`, `name` FROM {$wpdb->prefix}wpsc_product_list ORDER BY id ASC" );
+		$products = $wpdb->get_results( "SELECT `ID`, `post_name` FROM {$wpdb->prefix}posts WHERE post_type = 'wpsc-product' ORDER BY id ASC" );
 		if ( $products ) {
 			foreach ( $products AS $product ) {
-				$this->products[$product->id]['name'] = $product->name;
-				$this->getProductMeta( $product->id );
+				$this->products[$product->ID]['name'] = $product->post_name;
+				$this->getProductMeta( $product->ID );	
 			}
 			return true;
 		}
@@ -105,7 +93,7 @@ class WPSC_StockCounter
 		global $wpdb;
 		
 		$sold = 0;
-		$tickets = $wpdb->get_results( "SELECT `quantity` FROM {$wpdb->prefix}wpsc_cart_contents WHERE `prodid` = '".$pid."'" );
+		$tickets = $wpdb->get_results( "SELECT `quantity` FROM {$wpdb->prefix}wpsc_cart_contents WHERE `prodid` = '".intval($pid)."'" );
 		if ( $tickets ) {
 			foreach ( $tickets AS $ticket )
 				$sold += $ticket->quantity;
@@ -113,7 +101,7 @@ class WPSC_StockCounter
 		if ( $this->products[$pid]['linked_products'] != '' ) {
 			$linked_products = explode( ',', $this->products[$pid]['linked_products'] );
 			foreach ( $linked_products AS $l_pid ) {
-				$tickets = $wpdb->get_results( "SELECT `quantity` FROM {$wpdb->prefix}wpsc_cart_contents WHERE `prodid` = '".$l_pid."'" );
+				$tickets = $wpdb->get_results( "SELECT `quantity` FROM {$wpdb->prefix}wpsc_cart_contents WHERE `prodid` = '".intval($l_pid)."'" );
 				if ( $tickets ) {
 					foreach ( $tickets AS $ticket ) {
 						$sold += $ticket->quantity;
@@ -133,6 +121,7 @@ class WPSC_StockCounter
 	 */
 	private function getProductMeta( $pid )
 	{
+		$pid = intval($pid);
 		$options = get_option( 'wpsc-stock-counter' );
 		
 		$this->products[$pid]['limit'] = $options['products'][$pid]['limit'];
@@ -160,7 +149,10 @@ class WPSC_StockCounter
 
 			$options = get_option( 'wpsc-stock-counter' );
 			foreach ( $_POST['products'] AS $pid => $data ) {
-				$options['products'][$pid] = $data;
+				$pid = intval($pid);
+				// escape html characters for security
+				foreach($data as $i => $tmp) $data2[$i] = htmlspecialchars($tmp);
+				$options['products'][$pid] = $data2;
 			}
 			update_option( 'wpsc-stock-counter', $options );
 			
@@ -177,7 +169,7 @@ class WPSC_StockCounter
 			<table class="widefat" style="margin-top: 1em;">
 			<thead>
 				<tr>
-					<th scope="col"><?php _e( 'Event', 'wpsc-stock-counter' ) ?></th>
+					<th scope="col"><?php _e( 'Product', 'wpsc-stock-counter' ) ?></th>
 					<th scope="col"><?php _e( 'Sold', 'wpsc-stock-counter' ) ?></th>
 					<th scope="col"><?php _e( 'Available', 'wpsc-stock-counter' ) ?></th>
 				</tr>
@@ -245,10 +237,10 @@ class WPSC_StockCounter
 	public function activate()
 	{
 		$options = array();
-		add_option( 'wpsc-stock-counter', $options, 'DTL Ticketing Options', 'yes' );
+		add_option( 'wpsc-stock-counter', $options, '', 'yes' );
 
 		/*
-		* Add Capability to export DTA Files and change DTA Settings
+		* Add Capabilities
 		*/
 		$role = get_role('administrator');
 		$role->add_cap('view_stock_counter');
@@ -281,9 +273,9 @@ class WPSC_StockCounter
 	{
 		$plugin = basename(__FILE__,'.php').'/'.basename(__FILE__);
 //		$menu_title = "<img src='".$this->plugin_url."/icon.png' alt='' /> ".;
-		$menu_title = __( 'Stock Counter', 'wpsc-stock-counter' );
+		$menu_title = __( 'Shop Stock Counter', 'wpsc-stock-counter' );
 
-	 	$mypage = add_submenu_page( 'wpsc-sales-logs', __( 'Stock Counter', 'wpsc-stock-counter' ), $menu_title, 'view_stock_counter', basename(__FILE__), array(&$this, 'printAdminPage') );
+	 	$mypage = add_options_page( __( 'Shop Stock Counter', 'wpsc-stock-counter' ), $menu_title, 'view_stock_counter', basename(__FILE__), array(&$this, 'printAdminPage') );
 		add_action( "admin_print_scripts-$mypage", array(&$this, 'addHeaderCode') );
 		add_filter( 'plugin_action_links_' . $plugin, array( &$this, 'pluginActions' ) );
 	}

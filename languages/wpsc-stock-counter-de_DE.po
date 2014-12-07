@@ -2,13 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2008-05-22 13:54+0100\n"
+"PO-Revision-Date: 2014-12-06 23:22+0100\n"
 "Last-Translator: Kolja Schleich <kolja.schleich@googlemail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Country: GERMANY\n"
+"Language: de_DE\n"
+"X-Generator: Poedit 1.7.1\n"
 
 #: wpsc-stock-counter.php:151
 msgid "Settings saved"
@@ -23,8 +24,8 @@ msgid "Show Settings"
 msgstr "Einstellungen anzeigen"
 
 #: wpsc-stock-counter.php:164,195
-msgid "Event"
-msgstr "Veranstaltung"
+msgid "Product"
+msgstr "Produkt"
 
 #: wpsc-stock-counter.php:165
 msgid "Sold"
@@ -67,6 +68,5 @@ msgid "Save Settings"
 msgstr "Einstellungen speichern"
 
 #: wpsc-stock-counter.php:267
-msgid "Stock Counter"
-msgstr "Inventar Zähler"
-
+msgid "Shop Stock Counter"
+msgstr "Shop Inventar Zähler"
