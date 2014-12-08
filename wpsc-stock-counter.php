@@ -93,18 +93,24 @@ class WPSC_StockCounter
 		global $wpdb;
 		
 		$sold = 0;
-		$tickets = $wpdb->get_results( "SELECT `quantity` FROM {$wpdb->prefix}wpsc_cart_contents WHERE `prodid` = '".intval($pid)."'" );
-		if ( $tickets ) {
-			foreach ( $tickets AS $ticket )
-				$sold += $ticket->quantity;
-		}
-		if ( $this->products[$pid]['linked_products'] != '' ) {
-			$linked_products = explode( ',', $this->products[$pid]['linked_products'] );
-			foreach ( $linked_products AS $l_pid ) {
-				$tickets = $wpdb->get_results( "SELECT `quantity` FROM {$wpdb->prefix}wpsc_cart_contents WHERE `prodid` = '".intval($l_pid)."'" );
-				if ( $tickets ) {
-					foreach ( $tickets AS $ticket ) {
-						$sold += $ticket->quantity;
+		$pid = intval($pid);
+		if ($pid > 0) {
+			$tickets = $wpdb->get_results( "SELECT `quantity` FROM {$wpdb->prefix}wpsc_cart_contents WHERE `prodid` = '".$pid."'" );
+			if ( $tickets ) {
+				foreach ( $tickets AS $ticket )
+					$sold += $ticket->quantity;
+			}
+			if ( $this->products[$pid]['linked_products'] != '' ) {
+				$linked_products = explode( ',', $this->products[$pid]['linked_products'] );
+				foreach ( $linked_products AS $l_pid ) {
+					$l_pid = intval($l_pid);
+					if ($l_pid > 0) {
+						$tickets = $wpdb->get_results( "SELECT `quantity` FROM {$wpdb->prefix}wpsc_cart_contents WHERE `prodid` = '".$l_pid."'" );
+						if ( $tickets ) {
+							foreach ( $tickets AS $ticket ) {
+								$sold += $ticket->quantity;
+							}
+						}
 					}
 				}
 			}
