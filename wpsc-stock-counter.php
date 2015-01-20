@@ -3,10 +3,10 @@
 Plugin Name: WPSC Stock Counter
 Plugin URI: http://wordpress.org/extend/plugins/wpsc-stock-counter
 Description: Plugin for <a href="https://wordpress.org/plugins/wp-e-commerce/">Wordpress Shopping Cart</a> to count product stock. Products can be combined to be counted together.
-Version: 1.5
+Version: 1.5.1
 Author: Kolja Schleich
 
-Copyright 2007-2014  Kolja Schleich  (email : kolja [dot] schleich [at] googlemail.com)
+Copyright 2007-2015  Kolja Schleich  (email : kolja [dot] schleich [at] googlemail.com)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -156,6 +156,7 @@ class WPSC_StockCounter
 			$options = get_option( 'wpsc-stock-counter' );
 			foreach ( $_POST['products'] AS $pid => $data ) {
 				$pid = intval($pid);
+				if (!isset($data['count'])) $data['count'] = 0;
 				// escape html characters for security
 				foreach($data as $i => $tmp) $data2[$i] = htmlspecialchars($tmp);
 				$options['products'][$pid] = $data2;
@@ -169,7 +170,7 @@ class WPSC_StockCounter
 		<div class="wrap">
 			<h2><?php _e( 'Stock Summary', 'wpsc-stock-counter' ) ?></h2>
 			<?php if ( current_user_can('edit_stock_counter_settings') ) : ?>
-				<p style="margin-bottom: 0;"><a href="#" onclick="jQuery('div#wpsc-stock-counter-settings').fadeIn('fast');"><?php _e( 'Show Settings', 'wpsc-stock-counter' ) ?></a></p>
+				<p style="margin-bottom: 0;"><a href="<?php echo the_permalink() ?>?page=wpsc-stock-counter.php&amp;showsettings=1"><?php _e( 'Show Settings', 'wpsc-stock-counter' ) ?></a></p>
 			<?php endif; ?>
 			
 			<table class="widefat" style="margin-top: 1em;">
@@ -195,9 +196,10 @@ class WPSC_StockCounter
 			</table>
 		</div>
 		<?php if ( current_user_can('edit_stock_counter_settings') ) : ?>
-		<div class="wrap" id="wpsc-stock-counter-settings" style="display: none;">
+		<?php if (isset($_GET['showsettings'])) : ?>
+		<div class="wrap" id="wpsc-stock-counter-settings">
 			<h2><?php _e( 'Settings', 'wpsc-stock-counter' ) ?></h2>
-			<p><a href="#" onclick="jQuery('div#wpsc-stock-counter-settings').fadeOut('fast');"><?php _e( 'Hide Settings', 'wpsc-stock-counter' ) ?></a></p>
+			<p><a href="<?php echo the_permalink() ?>?page=wpsc-stock-counter.php"><?php _e( 'Hide Settings', 'wpsc-stock-counter' ) ?></a></p>
 			
 			<form action="" method="post">
 				<?php wp_nonce_field( 'wpsc-stock-counter-update-settings_stock' ) ?>
@@ -230,6 +232,7 @@ class WPSC_StockCounter
 				<p class="submit"><input type="submit" name="updateEventsCounter" value="<?php _e( 'Save Settings', 'wpsc-stock-counter' ) ?> &raquo;" class="button" /></p>
 			</form>
 		</div>
+		<?php endif; ?>
 		<?php endif;
 	}
 
