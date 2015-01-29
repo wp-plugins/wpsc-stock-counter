@@ -1,5 +1,5 @@
 === WPSC Stock Counter ===
-Contributors: Kolja Schleichs
+Contributors: Kolja Schleich
 Tags: shopping cart, tickets, shop, e-commerce, stock counter
 Requires at least: 2.3
 Tested up to: 4.1
