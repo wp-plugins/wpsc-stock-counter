@@ -3,7 +3,7 @@
 Plugin Name: WPSC Stock Counter
 Plugin URI: http://wordpress.org/extend/plugins/wpsc-stock-counter
 Description: Plugin for <a href="https://wordpress.org/plugins/wp-e-commerce/">Wordpress Shopping Cart</a> to count product stock. Products can be combined to be counted together.
-Version: 1.5.1
+Version: 1.5.2
 Author: Kolja Schleich
 
 Copyright 2007-2015  Kolja Schleich  (email : kolja [dot] schleich [at] googlemail.com)
@@ -52,7 +52,7 @@ class WPSC_StockCounter
 
 		// Uninstallation for WP 2.7
 		if ( function_exists('register_uninstall_hook') )
-		register_uninstall_hook(__FILE__, array(&$this, 'uninstall'));
+		register_uninstall_hook(__FILE__, array('WPSC_StockCounter', 'uninstall'));
 			
 		$this->plugin_url = WP_PLUGIN_URL.'/'.basename(__FILE__, '.php');
 		$this->getProducts();
@@ -166,6 +166,7 @@ class WPSC_StockCounter
 			echo '<div id="message" class="updated fade"><p><strong>'.__( 'Settings saved', 'wpsc-stock-counter' ) .'</strong></p></div>';
 			$this->getProducts();
 		}
+		$class = "";
 ?>
 		<div class="wrap">
 			<h2><?php _e( 'Stock Summary', 'wpsc-stock-counter' ) ?></h2>
@@ -311,7 +312,7 @@ class WPSC_StockCounter
 	 * @param none
 	 * @return void
 	 */
-	public function uninstall()
+	public static function uninstall()
 	{
 	 	delete_option( 'wpsc-stock-counter' );
 	}
