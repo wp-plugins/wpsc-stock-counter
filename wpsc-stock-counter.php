@@ -3,7 +3,7 @@
 Plugin Name: WPSC Stock Counter
 Plugin URI: http://wordpress.org/extend/plugins/wpsc-stock-counter
 Description: Plugin for <a href="https://wordpress.org/plugins/wp-e-commerce/">Wordpress Shopping Cart</a> to count product stock. Products can be combined to be counted together.
-Version: 1.5.2
+Version: 1.5.3
 Author: Kolja Schleich
 
 Copyright 2007-2015  Kolja Schleich  (email : kolja [dot] schleich [at] googlemail.com)
@@ -72,7 +72,7 @@ class WPSC_StockCounter
 		$products = $wpdb->get_results( "SELECT `ID`, `post_name` FROM {$wpdb->prefix}posts WHERE post_type = 'wpsc-product' ORDER BY id ASC" );
 		if ( $products ) {
 			foreach ( $products AS $product ) {
-				$this->products[$product->ID]['name'] = $product->post_name;
+				$this->products[$product->ID]['name'] = stripslashes($product->post_name);
 				$this->getProductMeta( $product->ID );	
 			}
 			return true;
@@ -130,8 +130,8 @@ class WPSC_StockCounter
 		$pid = intval($pid);
 		$options = get_option( 'wpsc-stock-counter' );
 		
-		$this->products[$pid]['limit'] = $options['products'][$pid]['limit'];
-		$this->products[$pid]['count'] = $options['products'][$pid]['count'];
+		$this->products[$pid]['limit'] = intval($options['products'][$pid]['limit']);
+		$this->products[$pid]['count'] = intval($options['products'][$pid]['count']);
 		$this->products[$pid]['linked_products'] = $options['products'][$pid]['linked_products'];
 
 		if ( 1 == $this->products[$pid]['count'] ) {

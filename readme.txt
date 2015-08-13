@@ -2,8 +2,8 @@
 Contributors: Kolja Schleichs
 Tags: shopping cart, tickets, shop, e-commerce, stock counter
 Requires at least: 2.3
-Tested up to: 4.1
-Stable tag: 1.5.2
+Tested up to: 4.2.4
+Stable tag: 1.5.3
 
 Plugin for the [WP E-Commerce Plugin](http://wordpress.org/extend/plugins/wp-e-commerce/) to count stock also of connected products.
 
@@ -34,6 +34,9 @@ The WPSC Stock Counter icon is adapted from the Fugue Icons of http://www.pinvok
 1. Administration Page
 
 == Changelog ==
+
+= 1.5.3 =
+* BUGFIX: add stripslashes to product names
 
 = 1.5.2 =
 * BUGFIX: small fixes
