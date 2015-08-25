@@ -3,7 +3,7 @@
 Plugin Name: WPSC Stock Counter
 Plugin URI: http://wordpress.org/extend/plugins/wpsc-stock-counter
 Description: Plugin for <a href="https://wordpress.org/plugins/wp-e-commerce/">Wordpress Shopping Cart</a> to count product stock. Products can be combined to be counted together.
-Version: 1.5.3
+Version: 1.5.4
 Author: Kolja Schleich
 
 Copyright 2007-2015  Kolja Schleich  (email : kolja [dot] schleich [at] googlemail.com)
@@ -95,7 +95,7 @@ class WPSC_StockCounter
 		$sold = 0;
 		$pid = intval($pid);
 		if ($pid > 0) {
-			$tickets = $wpdb->get_results( "SELECT `quantity` FROM {$wpdb->prefix}wpsc_cart_contents WHERE `prodid` = '".$pid."'" );
+			$tickets = $wpdb->get_results( $wpdb->prepare("SELECT `quantity` FROM {$wpdb->prefix}wpsc_cart_contents WHERE `prodid` = '%d'", $pid) );
 			if ( $tickets ) {
 				foreach ( $tickets AS $ticket )
 					$sold += $ticket->quantity;
@@ -105,7 +105,7 @@ class WPSC_StockCounter
 				foreach ( $linked_products AS $l_pid ) {
 					$l_pid = intval($l_pid);
 					if ($l_pid > 0) {
-						$tickets = $wpdb->get_results( "SELECT `quantity` FROM {$wpdb->prefix}wpsc_cart_contents WHERE `prodid` = '".$l_pid."'" );
+						$tickets = $wpdb->get_results( $wpdb->prepare("SELECT `quantity` FROM {$wpdb->prefix}wpsc_cart_contents WHERE `prodid` = '%d'", $l_pid) );
 						if ( $tickets ) {
 							foreach ( $tickets AS $ticket ) {
 								$sold += $ticket->quantity;
@@ -216,6 +216,7 @@ class WPSC_StockCounter
 					</tr>
 				</thead>
 				<tbody class="form-table">
+					<?php if (count($this->products)) : ?>
 					<?php foreach ( $this->products AS $pid => $data ) : $selected = ( $this->products[$pid]['count'] == 1 ) ? " checked='checked'" : ''; ?>
 					<?php $class = ( 'alternate' == $class ) ? '' : 'alternate'; ?>
 					<tr class="<?php echo $class ?>">
@@ -226,11 +227,12 @@ class WPSC_StockCounter
 						<td><input type="text" name="products[<?php echo $pid ?>][linked_products]" value="<?php echo $this->products[$pid]['linked_products'] ?>" /></td>
 					</tr>
 					<?php endforeach; ?>
+					<?php endif; ?>
 				</tbody>
 				</table>
 				<p style="font-size: 0.9em; font-style: italic;">*<?php _e( 'Comma separated list of IDs', 'wpsc-stock-counter' ) ?></p>	
 	
-				<p class="submit"><input type="submit" name="updateEventsCounter" value="<?php _e( 'Save Settings', 'wpsc-stock-counter' ) ?> &raquo;" class="button" /></p>
+				<p class="submit"><input type="submit" name="updateEventsCounter" value="<?php _e( 'Save Settings', 'wpsc-stock-counter' ) ?>" class="button button-primary" /></p>
 			</form>
 		</div>
 		<?php endif; ?>
