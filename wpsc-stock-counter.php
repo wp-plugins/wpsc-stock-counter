@@ -3,7 +3,7 @@
 Plugin Name: WPSC Stock Counter
 Plugin URI: http://wordpress.org/extend/plugins/wpsc-stock-counter
 Description: Plugin for <a href="https://wordpress.org/plugins/wp-e-commerce/">Wordpress Shopping Cart</a> to count product stock. Products can be combined to be counted together.
-Version: 1.5.5
+Version: 1.5.6
 Author: Kolja Schleich
 
 Copyright 2007-2015  Kolja Schleich  (email : kolja [dot] schleich [at] googlemail.com)
@@ -54,7 +54,7 @@ class WPSC_StockCounter
 		if ( function_exists('register_uninstall_hook') )
 			register_uninstall_hook(__FILE__, array('WPSC_StockCounter', 'uninstall'));
 			
-		$this->plugin_url = WP_PLUGIN_URL.'/'.basename(__FILE__, '.php');
+		$this->plugin_url = esc_url(WP_PLUGIN_URL.'/'.basename(__FILE__, '.php'));
 		$this->getProducts();
 	}
 	
@@ -171,7 +171,7 @@ class WPSC_StockCounter
 		<div class="wrap">
 			<h2><?php _e( 'Stock Summary', 'wpsc-stock-counter' ) ?></h2>
 			<?php if ( current_user_can('edit_stock_counter_settings') ) : ?>
-				<p style="margin-bottom: 0;"><a href="<?php menu_page_url('wpsc-stock-counter') ?>&showsettings=1"><?php _e( 'Show Settings', 'wpsc-stock-counter' ) ?></a></p>
+				<p style="margin-bottom: 0;"><a href="<?php esc_url(menu_page_url('wpsc-stock-counter')) ?>&showsettings=1"><?php _e( 'Show Settings', 'wpsc-stock-counter' ) ?></a></p>
 			<?php endif; ?>
 			
 			<table class="widefat" style="margin-top: 1em;">
@@ -200,9 +200,9 @@ class WPSC_StockCounter
 		<?php if (isset($_GET['showsettings'])) : ?>
 		<div class="wrap" id="wpsc-stock-counter-settings">
 			<h2><?php _e( 'Settings', 'wpsc-stock-counter' ) ?></h2>
-			<p><a href="<?php menu_page_url('wpsc-stock-counter') ?>"><?php _e( 'Hide Settings', 'wpsc-stock-counter' ) ?></a></p>
+			<p><a href="<?php esc_url(menu_page_url('wpsc-stock-counter')) ?>"><?php _e( 'Hide Settings', 'wpsc-stock-counter' ) ?></a></p>
 			
-			<form action="<?php menu_page_url('wpsc-stock-counter') ?>&showsettings=1" method="post">
+			<form action="<?php esc_url(menu_page_url('wpsc-stock-counter')) ?>&showsettings=1" method="post">
 				<?php wp_nonce_field( 'wpsc-stock-counter-update-settings_stock' ) ?>
 				
 				<table class="widefat">
@@ -299,7 +299,7 @@ class WPSC_StockCounter
 	 */
 	public function pluginActions( $links )
 	{
-		$settings_link = '<a href="'.menu_page_url('wpsc-stock-counter', 0).'">' . __('Settings') . '</a>';
+		$settings_link = '<a href="'.esc_url(menu_page_url('wpsc-stock-counter', 0)).'">' . __('Settings') . '</a>';
 		array_unshift( $links, $settings_link );
 	
 		return $links;
